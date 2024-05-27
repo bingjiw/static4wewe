@@ -50,7 +50,7 @@ set from=xiaorong.boy@icloud.com
 set envelope_from=yes
 EOL
 
-echo "############### 建 400 个 at job 每6个小时 发SQLite DB邮件以备份"
+echo "############### 建 4000 个 at job 每6个小时 发SQLite DB邮件以备份"
 
 echo "###### 1. 安装 at 和 atd"
 apk add at
@@ -88,4 +88,4 @@ done
 echo -e "\n############### all done."
 
 #原命令，现已放入循环中执行
-#echo -e "send on: $(date) \n\n\n by key1api-web app in container " | mutt -s "👑cron👑job: one-api.db for backup" -a /data/one-api.db -- LLC.Good.House@gmail.com
+#现不用此echo -e "send on: $(date) \n\n\n by key1api-web app in container " | mutt -s "👑cron👑job: one-api.db for backup" -a /data/one-api.db -- LLC.Good.House@gmail.com
