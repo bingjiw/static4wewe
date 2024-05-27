@@ -50,5 +50,31 @@ EOL
 # 环境变量中设置 SMTP 密码, 移到执行本script之前的run command中执行
 # export SMTP_PASSWORD="--will be set before RUN this script--"
 
-echo "# 建cron job 每天凌晨3:20 使用 mutt 发送带附件的邮件"
-echo "send from key1api-web app in container on: $(date)" | mutt -s "👑cron👑job: one-api.db for backup" -a /data/one-api.db -- LLC.Good.House@gmail.com
+echo "############### 建 400 个 at job 每6个小时 发SQLite DB邮件以备份"
+
+echo "###### 1. 安装 at 和 atd"
+apk add at
+
+echo "###### 2. 启动 atd 服务"
+atd
+
+echo "###### 3. 创建并运行设置 at 命令"
+echo "## 循环设置 4000 条 at 命令，每6小时执行一次，一天4次，共1000天（约2.7年）"
+for i in $(seq 0 3999); do
+  # 计算执行时间
+  HOURS=$((i * 6))
+  
+  # 设置邮件标题
+  EMAIL_TITLE="$i at👑job: one-api.db for backup"
+  
+  # 设置 at 命令
+  echo -e "$i of 4000次执行 \n\n send on: $(date) \n\n by key1api-web app in container" | mutt -s "$EMAIL_TITLE" -a /data/one-api.db -- LLC.Good.House@gmail.com | at now + $HOURS hours
+
+  # 4000次，每执行完一次，显示一个小点点，效果...........
+  echo -n "."
+done
+
+echo "all done."
+
+#原命令，现已放入循环中执行
+#echo -e "send on: $(date) \n\n\n by key1api-web app in container " | mutt -s "👑cron👑job: one-api.db for backup" -a /data/one-api.db -- LLC.Good.House@gmail.com
