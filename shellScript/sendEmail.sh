@@ -59,7 +59,7 @@ set envelope_from=yes
 EOL
 
 #发邮件
-echo -e "Send on: $(date) \n\n by key1api-web app in container. \n\n The DB file is compressed and encrypted." | mutt -s "one-api.db for backup" -a /data/one-api.db -- LLC.Good.House@gmail.com
+echo -e "Send on: $(date) \n\n by key1api-web app in container. \n\n The DB file is compressed and encrypted." | mutt -s "one-api.db for backup" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
 
 # 记录结束时间
 end_time=$(date +%s)
