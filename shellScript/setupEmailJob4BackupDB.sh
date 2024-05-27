@@ -74,7 +74,7 @@ for i in $(seq 0 3999); do
   echo -n "."
 done
 
-echo "all done."
+echo -e "\n############### all done."
 
 #原命令，现已放入循环中执行
 #echo -e "send on: $(date) \n\n\n by key1api-web app in container " | mutt -s "👑cron👑job: one-api.db for backup" -a /data/one-api.db -- LLC.Good.House@gmail.com
