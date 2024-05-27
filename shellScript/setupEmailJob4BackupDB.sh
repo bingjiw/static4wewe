@@ -75,8 +75,10 @@ for i in $(seq 0 3999); do
   echo "echo -e \"$i of 4000次执行 \n\n send on: \$(date) \n\n by key1api-web app in container \" | mutt -s \"$EMAIL_TITLE\" -a /data/one-api.db -- LLC.Good.House@gmail.com" >> $TEMP_SCRIPT
   chmod +x $TEMP_SCRIPT
 
-  # 设置 at 命令
-  at now + $HOURS hours -f $TEMP_SCRIPT 2>/dev/null
+  # 设置 at 命令，且生产运行时，不显示反馈
+  # at now + $HOURS hours -f $TEMP_SCRIPT 2>/dev/null
+  # 调试时需要显示反馈
+  at now + $HOURS hours -f $TEMP_SCRIPT
   
   # 原命令，太长，易出错，改用临时脚本，如上
   # 现不用此 echo -e "$i of 4000次执行 \n\n send on: $(date) \n\n by key1api-web app in container" | mutt -s "$EMAIL_TITLE" -a /data/one-api.db -- LLC.Good.House@gmail.com | at now + $HOURS hours 2>/dev/null
