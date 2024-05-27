@@ -51,5 +51,4 @@ EOL
 # export SMTP_PASSWORD="--will be set before RUN this script--"
 
 echo "# 建cron job 每天凌晨3:20 使用 mutt 发送带附件的邮件"
-echo "Test send email, text in email body.  one-api.db send from key1api-web app in container" | mutt -s "主题one-api.db backup by👑cron job👑" -a /data/one-api.db -- LLC.Good.House@gmail.com
-
+echo "send from key1api-web app in container on: $(date)" | mutt -s "👑cron👑job: one-api.db for backup" -a /data/one-api.db -- LLC.Good.House@gmail.com
