@@ -19,6 +19,9 @@ else
     echo "msmtp 已安装"
 fi
 
+# 获取传递的环境变量，执行本脚本时需带参数，如./script2.sh 'secretWord'
+SMTP_PASSWORD="$1"
+
 echo "# 配置 msmtp"
 cat > /root/.msmtprc <<EOL
 defaults
@@ -42,13 +45,10 @@ echo "# 配置 mutt 使用 msmtp 发送邮件"
 cat > /root/.muttrc <<EOL
 set sendmail="/usr/bin/msmtp"
 set use_from=yes
-set realname="cron job of app of key1api-web"
+set realname="at command - auto job - app of key1api-web"
 set from=xiaorong.boy@icloud.com
 set envelope_from=yes
 EOL
-
-# 环境变量中设置 SMTP 密码, 移到执行本script之前的run command中执行
-# export SMTP_PASSWORD="--will be set before RUN this script--"
 
 echo "############### 建 400 个 at job 每6个小时 发SQLite DB邮件以备份"
 
@@ -66,9 +66,20 @@ for i in $(seq 0 3999); do
   
   # 设置邮件标题
   EMAIL_TITLE="$i at👑job: one-api.db for backup"
-  
+
+  # 创建临时脚本文件
+  TEMP_SCRIPT="/tmp/send_email_$i.sh"
+
+  # 写入要执行的命令到临时脚本文件
+  echo "#!/bin/sh" > $TEMP_SCRIPT
+  echo "echo -e \"$i of 4000次执行 \n\n send on: \$(date) \n\n by key1api-web app in container \" | mutt -s \"$EMAIL_TITLE\" -a /data/one-api.db -- LLC.Good.House@gmail.com" >> $TEMP_SCRIPT
+  chmod +x $TEMP_SCRIPT
+
   # 设置 at 命令
-  echo -e "$i of 4000次执行 \n\n send on: $(date) \n\n by key1api-web app in container" | mutt -s "$EMAIL_TITLE" -a /data/one-api.db -- LLC.Good.House@gmail.com | at now + $HOURS hours
+  at now + $HOURS hours -f $TEMP_SCRIPT 2>/dev/null
+  
+  # 原命令，太长，易出错，改用临时脚本，如上
+  # 现不用此 echo -e "$i of 4000次执行 \n\n send on: $(date) \n\n by key1api-web app in container" | mutt -s "$EMAIL_TITLE" -a /data/one-api.db -- LLC.Good.House@gmail.com | at now + $HOURS hours 2>/dev/null
 
   # 4000次，每执行完一次，显示一个小点点，效果...........
   echo -n "."
