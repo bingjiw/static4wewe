@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# 记录脚本的开始时间
+start_time=$(date +%s)
+
 if [ -z "$1" ]; then
     echo "未传入参数：SMTP发信密码。无法发信。"
     exit 1
@@ -57,3 +60,10 @@ EOL
 
 #发邮件
 echo -e "Send on: $(date) \n\n by key1api-web app in container. \n\n The DB file is compressed and encrypted." | mutt -s "one-api.db for backup" -a /data/one-api.db -- LLC.Good.House@gmail.com
+
+# 记录结束时间
+end_time=$(date +%s)
+
+# 计算并显示耗时
+elapsed_time=$((end_time - start_time))
+echo "sendEmail.sh脚本执行共耗时：$elapsed_time 秒"
