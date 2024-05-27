@@ -32,7 +32,7 @@ host           smtp.mail.me.com
 port           587
 from           xiaorong.boy@icloud.com
 user           xiaorong.boy@icloud.com
-password       pdja-lsak-sqly-ajlw
+passwordeval   echo \$SMTP_PASSWORD
 EOL
 
 echo "# 确保 msmtprc 文件权限"
