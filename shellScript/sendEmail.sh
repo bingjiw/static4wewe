@@ -1,5 +1,12 @@
 #!/bin/sh
 
+if [ -z "$1" ]; then
+    echo "未传入参数：SMTP发信密码。无法发信。"
+    exit 1
+fi
+# 获取传递的环境变量 SMTP发信密码，执行本脚本时需带参数，如./script2.sh 'secretWord'
+SMTP_PASSWORD="$1"
+
 echo "安装：发带附件的邮件 的工具"
 echo "若mutt没有安装，就安装mutt。若msmtp没有安装，就安装msmtp。"
 
@@ -18,9 +25,6 @@ if ! command -v msmtp >/dev/null 2>&1; then
 else
     echo "msmtp 已安装"
 fi
-
-# 获取传递的环境变量 SMTP发信密码，执行本脚本时需带参数，如./script2.sh 'secretWord'
-SMTP_PASSWORD="$1"
 
 echo "# 配置 msmtp"
 cat > /root/.msmtprc <<EOL
