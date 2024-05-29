@@ -1,3 +1,4 @@
+echo "执行：获取数据库并部署 = GetDB_and_Restore.sh 脚本 ..."
 echo "容器重启动后one-api.db文件还未创建，应不存在，获取SQLite DB文件，以恢复原数据"
 if [ ! -f /data/one-api.db ]; then
     wget -O /data/Encrypted_Compressed_SQLiteDB.zip "https://raw.githubusercontent.com/bingjiw/static_key.wewegpt.com/main/SQLite_DB_file/Encrypted_Compressed_SQLiteDB.zip"
