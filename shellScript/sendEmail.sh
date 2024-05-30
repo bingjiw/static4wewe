@@ -101,24 +101,23 @@ time_20_minutes_ago_timestamp=$(date -d @$(( $(date +%s) - 1200 )) +%s)
 # 获取 DB 文件的修改时间戳
 DBFileModifyTimestamp=$(stat -c %Y /data/one-api.db)
 
-# 构建邮件正文
-EmailBodyText=$(cat "$TodayLogFilename")
-EmailBodyText="$EmailBodyText\n\n---- 昨天的报告 ----\n"
+# 构建邮件正文的昨天的报告部分
+EmailBodyText_YesterdayPart="\n\n---- 昨天的报告 ----\n"
 if [ -f "$YesterdayLogFileName" ]; then
-    EmailBodyText="$EmailBodyText$(cat "$YesterdayLogFileName")"
+    EmailBodyText_YesterdayPart="$EmailBodyText_YesterdayPart$(cat "$YesterdayLogFileName")"
 else
-    EmailBodyText="$EmailBodyText(无昨日报告文件)"
+    EmailBodyText_YesterdayPart="$EmailBodyText_YesterdayPart(无昨日报告文件)"
 fi
 
 # 比较DB文件的修改时间与当前时间减去20分钟
 if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
     echo "DB文件在最近20分钟内 有被修改,发邮件：备份报告+DB文件" >> "$TodayLogFilename"
-
+    EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
     echo "#发邮件 并附DB备份文件"
     echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\nThe DB file is compressed and encrypted." | mutt -s "one-api.db and Backup Report" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
 else
     echo "DB文件在最近20分钟内 无变化,发邮件：仅备份报告" >> "$TodayLogFilename"
-    
+    EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
     echo "#发邮件 不附DB备份文件"
     echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\nThe DB backup file is not included." | mutt -s "one-api.db and Backup Report" LLC.Good.House@gmail.com
 fi
