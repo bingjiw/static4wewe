@@ -64,11 +64,11 @@ else
     echo "# mutt 配置文件已存在，无需重新写入"
 fi
 
-echo "#vvvvvvvv 数据库备份情况每日报告 vvvvvvvv"
+echo "#VVVVVVVV 数据库备份情况每日报告 VVVVVVVV"
 # 获取日期
 today=$(date +%Y-%m-%d)
-yesterday=$(date -d "yesterday" +%Y-%m-%d)
-day_before_yesterday=$(date -d "2 days ago" +%Y-%m-%d)
+yesterday=$(date +%Y-%m-%d -d "1 day ago")
+day_before_yesterday=$(date +%Y-%m-%d -d "2 days ago")
 
 # 文件名
 TodayLogFilename="DailyReport-$today.log"
@@ -122,7 +122,7 @@ else
     echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\nThe DB backup file is not included." | mutt -s "one-api.db and Backup Report" LLC.Good.House@gmail.com
 fi
 
-echo "#===================================="
+echo "#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
 echo "# 记录结束时间"
 end_time=$(date +%s)
