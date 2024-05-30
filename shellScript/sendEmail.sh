@@ -29,8 +29,9 @@ else
     echo "msmtp 已安装"
 fi
 
-echo "# 配置 msmtp, 写/root/.msmtprc"
-cat > /root/.msmtprc <<EOL
+echo "# 配置 msmtp, 若无则写入 /root/.msmtprc"
+if [ ! -f /root/.msmtprc ]; then
+    cat > /root/.msmtprc <<EOL
 defaults
 auth           on
 tls            on
@@ -44,18 +45,24 @@ from           xiaorong.boy@icloud.com
 user           xiaorong.boy@icloud.com
 passwordeval   echo ${SMTP_PASSWORD}
 EOL
+    echo "# 确保 msmtprc 文件权限"
+    chmod 600 /root/.msmtprc
+else
+    echo "# msmtp 配置文件已存在，不用重新写入"
+fi
 
-echo "# 确保 msmtprc 文件权限"
-chmod 600 /root/.msmtprc
-
-echo "# 配置 mutt，写/root/.muttrc，以使用 msmtp 发送邮件"
-cat > /root/.muttrc <<EOL
+echo "# 配置 mutt，若无则写入 /root/.muttrc，以使用 msmtp 发送邮件"
+if [ ! -f /root/.muttrc ]; then
+    cat > /root/.muttrc <<EOL
 set sendmail="/usr/bin/msmtp"
 set use_from=yes
 set realname="at command - auto job - app of key1api-web"
 set from=xiaorong.boy@icloud.com
 set envelope_from=yes
 EOL
+else
+    echo "# mutt 配置文件已存在，无需重新写入"
+fi
 
 echo "#发邮件"
 echo -e "Send on: $(date) \n\n by key1api-web app in container. \n\n The DB file is compressed and encrypted." | mutt -s "one-api.db for backup" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
