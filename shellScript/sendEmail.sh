@@ -67,8 +67,8 @@ fi
 echo "#VVVVVVVV 数据库备份情况每日报告 VVVVVVVV"
 # 获取日期
 today=$(date +%Y-%m-%d)
-yesterday=$(date +%Y-%m-%d -d "1 day ago")
-day_before_yesterday=$(date +%Y-%m-%d -d "2 days ago")
+yesterday=$(date -d "$(date +%Y-%m-%d) - 1 day" +%Y-%m-%d)
+day_before_yesterday=$(date -d "$(date +%Y-%m-%d) - 2 days" +%Y-%m-%d)
 
 # 文件名
 TodayLogFilename="DailyReport-$today.log"
