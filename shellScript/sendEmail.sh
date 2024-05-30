@@ -64,8 +64,65 @@ else
     echo "# mutt 配置文件已存在，无需重新写入"
 fi
 
-echo "#发邮件"
-echo -e "Send on: $(date) \n\n by key1api-web app in container. \n\n The DB file is compressed and encrypted." | mutt -s "one-api.db for backup" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
+echo "#vvvvvvvv 数据库备份情况每日报告 vvvvvvvv"
+# 获取日期
+today=$(date +%Y-%m-%d)
+yesterday=$(date -d "yesterday" +%Y-%m-%d)
+day_before_yesterday=$(date -d "2 days ago" +%Y-%m-%d)
+
+# 文件名
+TodayLogFilename="DailyReport-$today.log"
+YesterdayLogFileName="DailyReport-$yesterday.log"
+DayBeforeYesterdayLogFileName="DailyReport-$day_before_yesterday.log"
+
+# 删除前天的日志文件
+if [ -f "$DayBeforeYesterdayLogFileName" ]; then
+    rm -f "$DayBeforeYesterdayLogFileName"
+fi
+
+# 创建今天的日志文件并写入初始内容
+if [ ! -f "$TodayLogFilename" ]; then
+    echo "Daily Report of $today" > "$TodayLogFilename"
+fi
+
+# 执行 atq 并将输出添加到今天的日志文件中
+atq >> "$TodayLogFilename"
+
+# 获取 /data/one-api.db 文件的最近修改日期时间
+DBFileLastModifyDatetime=$(stat -c %y /data/one-api.db)
+
+# 输出 DB 文件的最近修改日期时间并添加到今天的日志文件中
+echo "DB文件最近修改日期时间：$DBFileLastModifyDatetime" >> "$TodayLogFilename"
+
+# 当前时间减去20分钟的时间戳
+time_20_minutes_ago_timestamp=$(date -d @$(( $(date +%s) - 1200 )) +%s)
+
+# 获取 DB 文件的修改时间戳
+DBFileModifyTimestamp=$(stat -c %Y /data/one-api.db)
+
+# 构建邮件正文
+EmailBodyText=$(cat "$TodayLogFilename")
+EmailBodyText="$EmailBodyText\n\n---- 昨天的报告 ----\n"
+if [ -f "$YesterdayLogFileName" ]; then
+    EmailBodyText="$EmailBodyText$(cat "$YesterdayLogFileName")"
+else
+    EmailBodyText="$EmailBodyText(无昨日报告文件)"
+fi
+
+# 比较DB文件的修改时间与当前时间减去20分钟
+if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
+    echo "DB文件在最近20分钟内 有被修改,发邮件：备份报告+DB文件" >> "$TodayLogFilename"
+
+    echo "#发邮件 并附DB备份文件"
+    echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\nThe DB file is compressed and encrypted." | mutt -s "one-api.db and Backup Report" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
+else
+    echo "DB文件在最近20分钟内 无变化,发邮件：仅备份报告" >> "$TodayLogFilename"
+    
+    echo "#发邮件 不附DB备份文件"
+    echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\nThe DB backup file is not included." | mutt -s "one-api.db and Backup Report" LLC.Good.House@gmail.com
+fi
+
+echo "#===================================="
 
 echo "# 记录结束时间"
 end_time=$(date +%s)
