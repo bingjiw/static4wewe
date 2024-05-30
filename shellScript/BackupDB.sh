@@ -16,3 +16,4 @@ fi
 echo "#加密并压缩 one-api.db 文件"
 cd /data
 zip -e -P "$SQLITE_DB_FILE_COMPRESS_PASSWORD" Encrypted_Compressed_SQLiteDB.zip one-api.db
+
