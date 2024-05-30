@@ -1,6 +1,7 @@
 #!/bin/sh
 
-echo "#----执行 BackupDB.sh----\n上级的调用者会以最低CPU优先级执行本BackupDB.sh"
+echo "#----执行 BackupDB.sh----"
+echo "#上级的调用者会以最低CPU优先级执行本BackupDB.sh"
 
 echo "#先删除上次的压缩文件 /data/Encrypted_Compressed_SQLiteDB.zip"
 rm -f /data/Encrypted_Compressed_SQLiteDB.zip
