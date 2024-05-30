@@ -86,6 +86,7 @@ if [ ! -f "$TodayLogFilename" ]; then
 fi
 
 # 执行 atq 并将输出添加到今天的日志文件中
+echo "\n" >> "$TodayLogFilename"
 atq >> "$TodayLogFilename"
 
 # 获取 /data/one-api.db 文件的最近修改日期时间
