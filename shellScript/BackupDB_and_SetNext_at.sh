@@ -1,5 +1,3 @@
-BackupDB_and_SetNext_at.sh
-
 #!/bin/sh
 
 # 安装at命令
