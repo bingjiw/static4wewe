@@ -1,5 +1,5 @@
-echo "执行：获取数据库并部署 = GetDB_and_Restore.sh 脚本 ..."
-echo "获取SQLite DB文件，以恢复原数据。若本脚本执行于容器刚刚重启动后，则one-api.db文件还未创建，应不存在"
+echo "--------------- 获取数据库并恢复DB数据 GetDB_and_Restore.sh ---------------"
+echo "从Github获取SQLite DB文件，若本脚本执行于容器刚刚重启动后，则one-api.db文件还未创建，应不存在"
 if [ ! -f /data/one-api.db ]; then
 
     # 下载文件并覆盖已存在的文件
@@ -20,4 +20,4 @@ if [ ! -f /data/one-api.db ]; then
 else
     echo "》》》》》》》》one-api.db 文件已经存在，无需下载。没有改动已有的 one-api.db 文件"
 fi
-echo "--------------------------------"
+echo "################# 完成 获取数据库并恢复DB数据 #################"
