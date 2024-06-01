@@ -127,20 +127,55 @@ else
     EmailBodyText_YesterdayPart="$EmailBodyText_YesterdayPart(无昨日报告文件)"
 fi
 
+######## gpt-4o 重构的代码 #######
+send_email() {
+    local subject="$1"
+    local email_body="$2"
+    local attachment="$3"
+
+    if [ -n "$attachment" ]; then
+        echo "#发邮件 并附DB备份文件"
+        echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by key1api-web app in a docker container. \n$email_body\n\n---- The DB file is compressed and encrypted. ----" | mutt -s "$subject" -a "$attachment" -- LLC.Good.House@gmail.com
+    else
+        echo "#发邮件 不附DB备份文件"
+        echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by key1api-web app in a docker container. \n$email_body\n\n---- Since no change, so the DB backup file is not included. ----" | mutt -s "$subject" LLC.Good.House@gmail.com
+    fi
+}
+
+update_log_and_send_email() {
+    local log_message="$1"
+    local subject="$2"
+    local attachment="$3"
+
+    log_snippet="${log_snippet}, ${log_message}"
+    insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行
+    EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
+    send_email "$subject" "$EmailBodyText" "$attachment"
+}
+
+if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
+    update_log_and_send_email "最近20分钟 有被修改。邮件发：备份报告 + DB文件附件" "one-api.db and Backup Report" "/data/Encrypted_Compressed_SQLiteDB.zip"
+else
+    update_log_and_send_email "最近20分钟 无变化。邮件发：仅备份报告" "one-api.db and Backup Report" ""
+fi
+
+: << 'EOF'
+###### 用gpt-4o 重构前的原代码 ######
 # 比较DB文件的修改时间与当前时间减去20分钟
 if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
-    log_snippet="${log_snippet}, 最近20分钟 有被修改。邮件发：备份报告 + DB文件附件"            ####老写法echo "DB最近20分钟 有被修改。发邮件：备份报告+DB文件" >> "$TodayLogFilename"
+    log_snippet="${log_snippet}, 最近20分钟 有被修改。邮件发：备份报告 + DB文件附件"            
     insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行
     EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
     echo "#发邮件 并附DB备份文件"
     echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by key1api-web app in a docker container. \n$EmailBodyText\n\n---- The DB file is compressed and encrypted. ----" | mutt -s "one-api.db and Backup Report" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
 else
-    log_snippet="${log_snippet}, 最近20分钟 无变化。邮件发：仅备份报告"                       ####老写法echo "DB最近20分钟 无变化。发邮件：仅备份报告" >> "$TodayLogFilename"
+    log_snippet="${log_snippet}, 最近20分钟 无变化。邮件发：仅备份报告"                      
     insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行   
     EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
     echo "#发邮件 不附DB备份文件"
-    echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\n\n---- Since no change, so the DB backup file is not included. ----" | mutt -s "one-api.db and Backup Report" LLC.Good.House@gmail.com
+    echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by key1api-web app in a docker container. \n$EmailBodyText\n\n---- Since no change, so the DB backup file is not included. ----" | mutt -s "one-api.db and Backup Report" LLC.Good.House@gmail.com
 fi
+EOF
 
 echo "#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
