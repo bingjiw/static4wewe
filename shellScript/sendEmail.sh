@@ -85,14 +85,14 @@ if [ ! -f "$TodayLogFilename" ]; then
     echo "Daily Report of $today" > "$TodayLogFilename"
 fi
 
-### 定义插入内容的函数，在文件的第2行之前插入内容，因为第1条是标题，如: "Daily Report of $today"
+
+# 定义插入内容的函数，在文件的第2行之前插入内容
 insert_content_at_beginning_2nd_line() {
   local file="$1"
   local content="$2"
-  
+
   # 使用 sed 在文件的第2行之前插入内容
-  sed -i "2i\\
-$content" "$file"
+  sed -i "2i $content" "$file"
 }
 
 
