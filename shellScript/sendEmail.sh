@@ -91,8 +91,9 @@ insert_content_at_beginning_2nd_line() {
   local file="$1"
   local content="$2"
 
-  # 使用 sed 在文件的第2行之前插入内容
-  sed -i "2i $(printf '%s\n' "$content")" "$file"
+  # 使用 Here Document 将内容插入文件的第2行之前
+  sed -i "2i\\
+$(printf '%s\n' "$content")" "$file"
 }
 
 
