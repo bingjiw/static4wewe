@@ -98,8 +98,8 @@ insert_content_at_beginning_2nd_line() {
 
 # 获取当前时间和 atq 输出                                        
 current_time=$(printf "Now: %s   atq待执行job:" "$(date +"%H:%M")")     
-#将 atq_output 的每行开头都添加3个空格
-atq_output="$(atq | sed 's/^/   /')
+#将 atq_output 的每行开头都添加9个空格
+atq_output="$(atq | sed 's/^/         /')
 "
 
 # 将当前时间和 atq 输出拼接成一个内容块                         
@@ -133,7 +133,7 @@ if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
     insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行
     EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
     echo "#发邮件 并附DB备份文件"
-    echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\n\n---- The DB file is compressed and encrypted. ----" | mutt -s "one-api.db and Backup Report" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
+    echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by key1api-web app in a docker container. \n$EmailBodyText\n\n---- The DB file is compressed and encrypted. ----" | mutt -s "one-api.db and Backup Report" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
 else
     log_snippet="${log_snippet}, 最近20分钟 无变化。邮件发：仅备份报告"                       ####老写法echo "DB最近20分钟 无变化。发邮件：仅备份报告" >> "$TodayLogFilename"
     insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行   
