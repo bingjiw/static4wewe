@@ -105,7 +105,7 @@ log_snippet="$current_time\n$atq_output"
 
 
 # 获取 /data/one-api.db 文件的最近修改日期时间
-DBFileModifyTimestamp=$(stat -c %y /data/one-api.db)
+DBFileModifyTimestamp=$(stat -c %Y /data/one-api.db)
 DBFileLastModifyDatetime=$(date -d "@$DBFileModifyTimestamp" "+%Y-%m-%d %H:%M:%S")
 # 输出 DB 文件的最近修改日期时间并添加到今天的日志文件中
 log_snippet="${log_snippet}\nDB文件最近修改于：$DBFileLastModifyDatetime"   
@@ -113,9 +113,6 @@ log_snippet="${log_snippet}\nDB文件最近修改于：$DBFileLastModifyDatetime
 
 # 当前时间减去20分钟的时间戳
 time_20_minutes_ago_timestamp=$(date -d @$(( $(date +%s) - 1200 )) +%s)
-
-# 获取 DB 文件的修改时间戳
-DBFileModifyTimestamp=$(stat -c %Y /data/one-api.db)
 
 # 构建邮件正文的昨天的报告部分
 EmailBodyText_YesterdayPart="\n\n\n\n-------==== 昨天的报告 ====-------\n\n"
