@@ -80,20 +80,36 @@ if [ -f "$DayBeforeYesterdayLogFileName" ]; then
     rm -f "$DayBeforeYesterdayLogFileName"
 fi
 
-# 创建今天的日志文件并写入初始内容
+# 如果今天的日志文件还不存在，则创建今天的日志文件并写入初始内容
 if [ ! -f "$TodayLogFilename" ]; then
     echo "Daily Report of $today" > "$TodayLogFilename"
 fi
 
-# 执行 atq 并将输出添加到今天的日志文件中
-echo -e "\nNow: $(date +"%H:%M")    atq待执行任务如下" >> "$TodayLogFilename"
-atq >> "$TodayLogFilename"
+### 定义插入内容的函数，在文件的第2行之前插入内容，因为第1条是标题，如: "Daily Report of $today"
+insert_content_at_beginning_2nd_line() {
+  local file="$1"
+  local content="$2"
+  
+  # 使用 sed 在文件的第2行之前插入内容
+  sed -i "2i\\
+$content" "$file"
+}
+
+
+# 获取当前时间和 atq 输出                                   ####原来的老方法       
+current_time="\nNow: $(date +"%H:%M")   atq待执行job:"    ####采用函数insert_content_at_beginning之前的添加到文件末尾的老方法    
+atq_output="$(atq)"                                      ##### 执行 atq 并将输出添加到今天的日志文件中     
+# 将当前时间和 atq 输出拼接成一个内容块                       ####echo -e "\nNow: $(date +"%H:%M")    atq待执行任务如下" >> "$TodayLogFilename"   
+# 赋给log_snippet即本次执行将要输出的一小段log                ####atq >> "$TodayLogFilename"   
+log_snippet="$current_time\n$atq_output"                    
+
 
 # 获取 /data/one-api.db 文件的最近修改日期时间
 DBFileLastModifyDatetime=$(stat -c %y /data/one-api.db)
-
+#
 # 输出 DB 文件的最近修改日期时间并添加到今天的日志文件中
-echo "DB文件最近修改于：$DBFileLastModifyDatetime" >> "$TodayLogFilename"
+log_snippet="${log_snippet}DB文件最近修改于：$DBFileLastModifyDatetime"   ####老写法echo "DB文件最近修改于：$DBFileLastModifyDatetime" >> "$TodayLogFilename"
+
 
 # 当前时间减去20分钟的时间戳
 time_20_minutes_ago_timestamp=$(date -d @$(( $(date +%s) - 1200 )) +%s)
@@ -102,7 +118,7 @@ time_20_minutes_ago_timestamp=$(date -d @$(( $(date +%s) - 1200 )) +%s)
 DBFileModifyTimestamp=$(stat -c %Y /data/one-api.db)
 
 # 构建邮件正文的昨天的报告部分
-EmailBodyText_YesterdayPart="\n\n---- 昨天的报告 ----\n"
+EmailBodyText_YesterdayPart="\n\n\n----==== 昨天的报告 ====----\n\n"
 if [ -f "$YesterdayLogFileName" ]; then
     EmailBodyText_YesterdayPart="$EmailBodyText_YesterdayPart$(cat "$YesterdayLogFileName")"
 else
@@ -111,12 +127,14 @@ fi
 
 # 比较DB文件的修改时间与当前时间减去20分钟
 if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
-    echo "DB最近20分钟 有被修改。发邮件：备份报告+DB文件" >> "$TodayLogFilename"
+    log_snippet="${log_snippet}  DB最近20分钟 有被修改。发邮件：备份报告+DB文件"            ####老写法echo "DB最近20分钟 有被修改。发邮件：备份报告+DB文件" >> "$TodayLogFilename"
+    insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行
     EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
     echo "#发邮件 并附DB备份文件"
     echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\n\n---- The DB file is compressed and encrypted. ----" | mutt -s "one-api.db and Backup Report" -a /data/Encrypted_Compressed_SQLiteDB.zip -- LLC.Good.House@gmail.com
 else
-    echo "DB最近20分钟 无变化。发邮件：仅备份报告" >> "$TodayLogFilename"
+    log_snippet="${log_snippet}  DB最近20分钟 无变化。发邮件：仅备份报告"                   ####老写法echo "DB最近20分钟 无变化。发邮件：仅备份报告" >> "$TodayLogFilename"
+    insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行   
     EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
     echo "#发邮件 不附DB备份文件"
     echo -e "Send on: $(date) by key1api-web app in a docker container. \n$EmailBodyText\n\n---- Since no change, so the DB backup file is not included. ----" | mutt -s "one-api.db and Backup Report" LLC.Good.House@gmail.com
