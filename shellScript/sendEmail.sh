@@ -108,7 +108,7 @@ log_snippet="$current_time\n$atq_output"
 DBFileLastModifyDatetime=$(stat -c %y /data/one-api.db)
 #
 # 输出 DB 文件的最近修改日期时间并添加到今天的日志文件中
-log_snippet="${log_snippet}DB文件最近修改于：$DBFileLastModifyDatetime"   ####老写法echo "DB文件最近修改于：$DBFileLastModifyDatetime" >> "$TodayLogFilename"
+log_snippet="${log_snippet}\nDB文件最近修改于：$DBFileLastModifyDatetime"   ####老写法echo "DB文件最近修改于：$DBFileLastModifyDatetime" >> "$TodayLogFilename"
 
 
 # 当前时间减去20分钟的时间戳
