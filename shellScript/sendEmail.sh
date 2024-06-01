@@ -88,18 +88,17 @@ fi
 
 # 定义插入内容的函数，在文件的第2行之前插入内容
 insert_content_at_beginning_2nd_line() {
-  local file="$1"
-  local content="$2"
-
-
-echo 'awk'
-awk -v content="$content" 'NR==1{print; print content; next}1' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
-
-echo 'sed -i "2i\$content" "$file"'
-sed -i "2i\$content" "$file"
-
-#echo 'echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"'
-#echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"
+    local file="$1"
+    local content="$2"
+    
+    #各种奇怪的 sed 插入内容的写法，留着纪念
+    #echo 'awk'
+    #awk -v content="$content" 'NR==1{print; print content; next}1' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+    #
+    #echo 'echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"'
+    #echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"
+    
+    sed -i "2i\$content" "$file"
 }
 
 
