@@ -104,14 +104,16 @@ insert_content_at_beginning_2nd_line() {
 
 
 # 获取当前时间和 atq 输出                                        
-current_time=$(printf "\nNow: %s   atq待执行job:\n" "$(date +"%H:%M")")     
+current_time=$(printf "Now: %s   atq待执行job:" "$(date +"%H:%M")")     
 #将 atq_output 的每行开头都添加3个空格
 atq_output="$(atq | sed 's/^/   /')
 "
 
 # 将当前时间和 atq 输出拼接成一个内容块                         
 # 赋给log_snippet即本次执行将要输出的一小段log                  
-log_snippet="$current_time$atq_output"                    
+log_snippet="
+$current_time
+$atq_output"                    
 
 
 # 获取 /data/one-api.db 文件的最近修改日期时间
