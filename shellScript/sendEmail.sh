@@ -92,18 +92,14 @@ insert_content_at_beginning_2nd_line() {
   local content="$2"
 
 
-echo 'awk -v content="$content" 'NR==1{print; print content; next}1' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"'
+echo 'awk'
 awk -v content="$content" 'NR==1{print; print content; next}1' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
-
-  echo '# 使用 Here Document 将内容插入文件的第2行之前'
-  sed -i "2i\\
-  $(printf '%s\n' "$content")" "$file"
 
 echo 'sed -i "2i\$content" "$file"'
 sed -i "2i\$content" "$file"
 
-echo 'echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"'
-echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"
+#echo 'echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"'
+#echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"
 }
 
 
