@@ -91,15 +91,8 @@ insert_content_at_beginning_2nd_line() {
     local file="$1"
     local content="$2"
     
-    #各种奇怪的 sed 插入内容的写法，留着纪念
-    #echo 'awk works'
-    #awk -v content="$content" 'NR==1{print; print content; next}1' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
-    #
-    #echo 'echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"'
-    #echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"
-    
-    # 直接插入内容到文件的第2行之前
-    echo "$content" | sed -i "2r /dev/stdin" "$file"
+    #原用 sed 的写法一直出各种错，故改用 awk
+    awk -v content="$content" 'NR==1{print; print content; next}1' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
 }
 
 
