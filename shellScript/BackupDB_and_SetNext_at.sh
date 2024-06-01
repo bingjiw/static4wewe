@@ -18,11 +18,11 @@ else
     echo "atd服务已启动"
 fi
 
-echo "# 设定20分钟后执行BackupDB_and_SetNext_at.sh脚本"
-echo "/data/BackupDB_and_SetNext_at.sh" | at now + 20 minutes
+echo "# 等待9秒钟以确保 atd 已启动"
+sleep 9
 
-####echo "# 将BackupDB.sh脚本设置为可执行"
-####已经在设于RUN Commands的命令中执行过了： chmod +x /data/BackupDB.sh
+echo -e "# 设定20分钟后执行BackupDB_and_SetNext_at.sh脚本\n"
+echo "/data/BackupDB_and_SetNext_at.sh" | at now + 20 minutes #重启后自动运行此脚本时易出错：Can't open /run/atd.pid to signal atd. No atd running?
 
-echo "# 以最低CPU优先级执行BackupDB.sh"
+echo -e "\n# 以最低CPU优先级执行BackupDB.sh"
 nice -n 19 /data/BackupDB.sh
