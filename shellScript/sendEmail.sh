@@ -92,32 +92,33 @@ insert_content_at_beginning_2nd_line() {
     local content="$2"
     
     #各种奇怪的 sed 插入内容的写法，留着纪念
-    echo 'awk'
-    awk -v content="$content" 'NR==1{print; print content; next}1' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+    #echo 'awk works'
+    #awk -v content="$content" 'NR==1{print; print content; next}1' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
     #
     #echo 'echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"'
     #echo "$content" | sed 's/$/\\n/' | sed -i "2r /dev/stdin" "$file"
-
-    # 在每行开头添加 \t 缩进，然后插入到文件的第2行之前
-    echo "$content" | sed 's/^/\t/' | sed -i "2r /dev/stdin" "$file"
     
-    sed -i "2i$content" "$file"
+    # 直接插入内容到文件的第2行之前
+    echo "$content" | sed -i "2r /dev/stdin" "$file"
 }
 
 
 # 获取当前时间和 atq 输出                                        
-current_time=$(printf "\nNow: %s   atq待执行job:" "$(date +"%H:%M")")     
-atq_output="$(atq)"                                      
+current_time=$(printf "\nNow: %s   atq待执行job:\n" "$(date +"%H:%M")")     
+#将 atq_output 的每行开头都添加3个空格
+atq_output="$(atq | sed 's/^/   /')
+"
+
 # 将当前时间和 atq 输出拼接成一个内容块                         
 # 赋给log_snippet即本次执行将要输出的一小段log                  
-log_snippet="$current_time\n$atq_output"                    
+log_snippet="$current_time$atq_output"                    
 
 
 # 获取 /data/one-api.db 文件的最近修改日期时间
 DBFileModifyTimestamp=$(stat -c %Y /data/one-api.db)
 DBFileLastModifyDatetime=$(date -d "@$DBFileModifyTimestamp" "+%Y-%m-%d %H:%M:%S")
 # 输出 DB 文件的最近修改日期时间并添加到今天的日志文件中
-log_snippet="${log_snippet}\nDB文件最近修改于：$DBFileLastModifyDatetime"   
+log_snippet="${log_snippet}DB文件最近修改于：$DBFileLastModifyDatetime"   
 
 
 # 当前时间减去20分钟的时间戳
