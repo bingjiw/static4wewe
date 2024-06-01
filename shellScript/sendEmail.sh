@@ -82,7 +82,7 @@ fi
 
 # 如果今天的日志文件还不存在，则创建今天的日志文件并写入初始内容
 if [ ! -f "$TodayLogFilename" ]; then
-    echo "Daily Report of $today" > "$TodayLogFilename"
+    echo -e "Daily Report of $today" > "$TodayLogFilename"
 fi
 
 
@@ -96,11 +96,11 @@ insert_content_at_beginning_2nd_line() {
 }
 
 
-# 获取当前时间和 atq 输出                                   ####原来的老方法       
-current_time="\nNow: $(date +"%H:%M")   atq待执行job:"    ####采用函数insert_content_at_beginning之前的添加到文件末尾的老方法    
-atq_output="$(atq)"                                      ##### 执行 atq 并将输出添加到今天的日志文件中     
-# 将当前时间和 atq 输出拼接成一个内容块                       ####echo -e "\nNow: $(date +"%H:%M")    atq待执行任务如下" >> "$TodayLogFilename"   
-# 赋给log_snippet即本次执行将要输出的一小段log                ####atq >> "$TodayLogFilename"   
+# 获取当前时间和 atq 输出                                        
+current_time=$(printf "\nNow: %s   atq待执行job:" "$(date +"%H:%M")")     
+atq_output="$(atq)"                                      
+# 将当前时间和 atq 输出拼接成一个内容块                         
+# 赋给log_snippet即本次执行将要输出的一小段log                  
 log_snippet="$current_time\n$atq_output"                    
 
 
