@@ -168,23 +168,23 @@ class ChatChannel(Channel):
         logger.debug("[WX] ready to handle context: {}".format(context))
         # reply的构建步骤
         reply = self._generate_reply(context)
+                
+        logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  开始 《《《《")
         
-logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  开始 《《《《")
-
-logger.debug("《《《《《《 根据 第1次 产生的回答，来判断 是否需要 第2次调用（引发LINKAI插件来处理）")
-
-logger.debug("《《《《《《 不需要 第2次调用（引发LINKAI插件来处理）")
-
-logger.debug("《《《《《《 第1次的回答 是“很抱歉...”，需要进行 第2次调用（引发LINKAI插件来处理）")
-
-logger.debug("《《《《《《 修改USE_LINKAI为TRUE ")
-
-logger.debug("《《《《《《 执行：第2次 调用 以让LINKAI产生回答 ")
-reply = self._generate_reply(context)
-
-logger.debug("《《《《《《 修改USE_LINKAI为FALSE ")
-
-logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  完成 《《《《")
+        logger.debug("《《《《《《 根据 第1次 产生的回答，来判断 是否需要 第2次调用（引发LINKAI插件来处理）")
+        
+        logger.debug("《《《《《《 不需要 第2次调用（引发LINKAI插件来处理）")
+        
+        logger.debug("《《《《《《 第1次的回答 是“很抱歉...”，需要进行 第2次调用（引发LINKAI插件来处理）")
+        
+        logger.debug("《《《《《《 修改USE_LINKAI为TRUE ")
+        
+        logger.debug("《《《《《《 执行：第2次 调用 以让LINKAI产生回答 ")
+        reply = self._generate_reply(context)
+        
+        logger.debug("《《《《《《 修改USE_LINKAI为FALSE ")
+        
+        logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  完成 《《《《")
 
         logger.debug("[WX] ready to decorate reply: {}".format(reply))
 
