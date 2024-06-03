@@ -1,4 +1,5 @@
 #《《《《《 引入另一个 专门判断回答是否是“很抱歉，我无法”之类的 函数 .py 文件
+#《《《《《 判断 AI回复的文本 决定要不要实时搜索
 from ANSWER_APOLOGY import analyze_text_features__need_search
 
 import os
@@ -174,7 +175,7 @@ class ChatChannel(Channel):
                 
         logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  开始 《《《《")
         
-        logger.debug("《《《《《《 根据 第1次 产生的回答，来判断 是否需要 第2次调用（引发LINKAI插件来处理）")
+        logger.debug("《《《《《《 判断 AI回复的文本 决定要不要实时搜索。根据第1次产生的回答，来判断是否需要第2次调用（引发LINKAI插件来处理）")
         word_count, features, sum_of_scores = analyze_text_features__need_search(reply.content)
         logger.debug(f"《《《《《《 词语: {word_count} 总分: {sum_of_scores} 明细: {features}")
     
