@@ -95,8 +95,17 @@ def analyze_text_features__need_search(text):
     #
     adjusted_score = round(adjusted_score, 2)
 
+    #把分析结果用美观的格式组成字符串，方便调用者直接显示查看结果
+    analyze_result_string = (
+        text[:60] + "\n" +
+        f"词语:{word_count} 总分:{sum_of_scores} 明细:{features}\n" +
+        f"三小类合计分: 抱歉类 {score_summaries['抱歉类总分']}, 建议类 {score_summaries['建议类总分']}, 信息类 {score_summaries['信息类总分']}\n" +
+        f"三小类平均分: 抱歉类 {score_summaries['抱歉类平均分']}, 建议类 {score_summaries['建议类平均分']}, 信息类 {score_summaries['信息类平均分']}\n" +
+        f"修正后总分:{adjusted_score}\n" +
+        "--------------"
+    )    
 
-    return matched_count, matched_features, sum_of_scores, adjusted_score, {
+    return analyze_result_string, matched_count, matched_features, sum_of_scores, adjusted_score, {
         "抱歉类总分": apologies_score_sum,
         "建议类总分": suggestions_score_sum,
         "信息类总分": info_terms_score_sum,
@@ -104,5 +113,6 @@ def analyze_text_features__need_search(text):
         "建议类平均分": suggestions_avg_score,
         "信息类平均分": info_terms_avg_score        
     }
+
 
 
