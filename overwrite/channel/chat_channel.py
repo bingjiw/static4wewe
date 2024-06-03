@@ -1,3 +1,6 @@
+#《《《《《 引入另一个 专门判断回答是否是“很抱歉，我无法”之类的 函数 .py 文件
+from ANSWER_APOLOGY import analyze_text_features__need_search
+
 import os
 import re
 import threading
@@ -172,7 +175,9 @@ class ChatChannel(Channel):
         logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  开始 《《《《")
         
         logger.debug("《《《《《《 根据 第1次 产生的回答，来判断 是否需要 第2次调用（引发LINKAI插件来处理）")
-        
+        word_count, features, sum_of_scores = analyze_text_features__need_search(reply.content)
+        logger.debug(f"《《《《《《 词语: {word_count} 总分: {sum_of_scores} 明细: {features}")
+    
         logger.debug("《《《《《《 不需要 第2次调用（引发LINKAI插件来处理）")
         
         logger.debug("《《《《《《 第1次的回答 是“很抱歉...”，需要进行 第2次调用（引发LINKAI插件来处理）")
@@ -183,6 +188,8 @@ class ChatChannel(Channel):
         reply = self._generate_reply(context)
         
         logger.debug("《《《《《《 修改USE_LINKAI为FALSE ")
+
+        logger.debug("《《《《《《 在回答的开头加上🌎说明这是互联网实时搜索得来的回答")
         
         logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  完成 《《《《")
 
