@@ -1,6 +1,6 @@
 #《《《《《 引入另一个 专门判断回答是否是“很抱歉，我无法”之类的 函数 .py 文件
 #《《《《《 判断 AI回复的文本 决定要不要实时搜索
-from ANSWER_APOLOGY import analyze_text_features__need_search
+from channel.ANSWER_APOLOGY import analyze_text_features__need_search
 
 import os
 import re
