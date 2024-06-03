@@ -39,6 +39,7 @@ def contains_information_terms(text):
             position = text.index(term)
             # 如果文字不足100字，则按100字计算，目的是增加不足100字的文字的各项评分值
             score = 1 - (position / max(100, len(text)))
+            score = round(score, 1)   ### 将 score 四舍五入保留一位小数。这样，无论在哪里使用 score，它都只会显示一位小数。
             matched_terms.append((term, score))
     return matched_terms
 
@@ -50,9 +51,9 @@ def analyze_text_features__need_search(text):
     
     matched_count = (len(matched_apologies) > 0) + (len(matched_suggestions) > 0) + (len(matched_info_terms) > 0)
     matched_features = {
-        "apologies": matched_apologies,
-        "suggestions": matched_suggestions,
-        "information_terms": matched_info_terms
+        "抱歉类": matched_apologies,
+        "建议类": matched_suggestions,
+        "信息类": matched_info_terms
     }
     
     # 计算总评分值
