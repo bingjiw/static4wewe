@@ -176,26 +176,30 @@ class ChatChannel(Channel):
         logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  开始 《《《《")
         
         logger.debug("《《《《《《 判断 AI回复的文本 决定要不要实时搜索。根据第1次产生的回答，来判断是否需要第2次调用（引发LINKAI插件来处理）")
-        word_count, features, sum_of_scores = analyze_text_features__need_search(reply.content)
-        logger.debug(f"《《《《《《 词语: {word_count} 总分: {sum_of_scores} 明细: {features}")
+        analyze_result_string, word_count, features, sum_of_scores, adjusted_score, score_summaries = analyze_text_features__need_search(text)
+        logger.debug(analyze_result_string)
     
-        logger.debug("《《《《《《 不需要 第2次调用（引发LINKAI插件来处理）")
         
-        logger.debug("《《《《《《 第1次的回答 是“很抱歉...”，需要进行 第2次调用（引发LINKAI插件来处理）")
+        #analyze_text_features__need_search 如果 need_search 结果值较小，则不需要再 上网实时搜索
+        if adjusted_score < 3 :
+            logger.debug("《《《《《《 不需要 上网实时搜索。 不需要 第2次调用（引发LINKAI插件来处理）")
+        else :
+            logger.debug("《《《《《《 第1次的回答 是“很抱歉...”，需要进行 第2次调用（引发LINKAI插件来处理）")
         
-        logger.debug("《《《《《《 修改USE_LINKAI为TRUE ")
+            logger.debug("《《《《《《 修改USE_LINKAI为TRUE ")
 
-        logger.debug("###### 输出第1次后 第2次前 的 context 以作对比检查")
+            logger.debug("###### 输出第1次后 第2次前 的 context 以作对比检查")
         
-        logger.debug("《《《《《《 执行：第2次 调用 以让LINKAI产生回答 ")
-        reply = self._generate_reply(context)
+            logger.debug("《《《《《《 执行：第2次 调用 以让LINKAI产生回答 ")
+            reply = self._generate_reply(context)
 
-        logger.debug("###### 输出第2次后的 context  以作对比检查")
+            logger.debug("###### 输出第2次后的 context  以作对比检查")
         
-        logger.debug("《《《《《《 修改USE_LINKAI为FALSE ")
+            logger.debug("《《《《《《 修改USE_LINKAI为FALSE ")
 
-        logger.debug("《《《《《《 在回答的开头加上🌎说明这是互联网实时搜索得来的回答")
+            logger.debug("《《《《《《 在回答的开头加上🌎说明这是互联网实时搜索得来的回答")
         
+
         logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  完成 《《《《")
 
         logger.debug("[WX] ready to decorate reply: {}".format(reply))
