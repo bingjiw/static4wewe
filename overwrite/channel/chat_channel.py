@@ -169,7 +169,7 @@ class ChatChannel(Channel):
     def _handle(self, context: Context):
         if context is None or not context.content:
             return
-        logger.debug("[WX] ready to handle context: {}".format(context))
+        logger.debug("###### 输出第1次前的 context 以作对比检查 [WX] ready to handle context: {}".format(context))
         # reply的构建步骤
         reply = self._generate_reply(context)
                 
@@ -184,9 +184,13 @@ class ChatChannel(Channel):
         logger.debug("《《《《《《 第1次的回答 是“很抱歉...”，需要进行 第2次调用（引发LINKAI插件来处理）")
         
         logger.debug("《《《《《《 修改USE_LINKAI为TRUE ")
+
+        logger.debug("###### 输出第1次后 第2次前 的 context 以作对比检查")
         
         logger.debug("《《《《《《 执行：第2次 调用 以让LINKAI产生回答 ")
         reply = self._generate_reply(context)
+
+        logger.debug("###### 输出第2次后的 context  以作对比检查")
         
         logger.debug("《《《《《《 修改USE_LINKAI为FALSE ")
 
