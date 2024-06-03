@@ -168,7 +168,7 @@ class ChatChannel(Channel):
         logger.debug("[WX] ready to handle context: {}".format(context))
         # reply的构建步骤
         reply = self._generate_reply(context)
-
+#《《《《《《《《《《《《《 我的插入点位在此
         logger.debug("[WX] ready to decorate reply: {}".format(reply))
 
         # reply的包装步骤
