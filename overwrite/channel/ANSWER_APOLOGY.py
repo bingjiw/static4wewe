@@ -1,6 +1,9 @@
 import re
 
 def contains_apology(text):
+    if text is None:
+        return []
+    
     apology_phrases = [
         "很抱歉", "对不起", "抱歉", "无法提供", "不能提供", "不能浏览", "无法实时",
         "不能查询", "无法查询", "作为AI", "作为人工智能", "作为一个基于", "历史数据训练",
@@ -17,6 +20,9 @@ def contains_apology(text):
     return matched_phrases
 
 def contains_alternative_suggestion(text):
+    if text is None:
+        return []
+
     suggestion_phrases = [
         "建议您", "查询", "查阅", "查看", "访问", "使用", "通过", "联系", "获取", "查找"
     ]
@@ -31,6 +37,9 @@ def contains_alternative_suggestion(text):
     return matched_phrases
 
 def contains_information_terms(text):
+    if text is None:
+        return []
+
     information_terms = [
         "信息", "数据", "消息", "动态", "最新预报", "天气", "气象", "最新的", "新闻"
     ]
@@ -48,7 +57,7 @@ def contains_information_terms(text):
 
 #长度倾向值=(120-总字数)/60 越大越像是"很抱歉，无法获取"，越小越不像
 def calculate_length_tendency(text):
-    char_count = len(text)
+    char_count = len(text) if text is not None else 0
     length_tendency = (120 - char_count) / 60
     length_tendency = round(length_tendency, 2)   # 四舍五入保留2位小数
     return length_tendency
@@ -121,7 +130,7 @@ def analyze_text_features__need_search(text):
         f"三小类平均分: 抱歉类 {apologies_avg_score}, 建议类 {suggestions_avg_score}, 信息类 {info_terms_avg_score}\n" +
         f"原总分:{sum_of_scores}  按3类词先后次序修正后总分:{adjusted_score}  再依长度倾向值{length_tendency}修正后最终总分:{final_score}\n" +
         "--------------"
-    )    
+    ) if text is not None else "收到的回复文本为空 None ，无需分析\n--------------------------------"
 
     return analyze_result_string, matched_count, matched_features, sum_of_scores, adjusted_score, {
         "抱歉类总分": apologies_score_sum,
@@ -131,6 +140,3 @@ def analyze_text_features__need_search(text):
         "建议类平均分": suggestions_avg_score,
         "信息类平均分": info_terms_avg_score        
     }
-
-
-
