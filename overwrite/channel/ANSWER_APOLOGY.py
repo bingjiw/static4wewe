@@ -132,11 +132,4 @@ def analyze_text_features__need_search(text):
         "--------------"
     ) if text is not None else "收到的回复文本为空 None ，无需分析\n--------------------------------"
 
-    return analyze_result_string, matched_count, matched_features, sum_of_scores, adjusted_score, {
-        "抱歉类总分": apologies_score_sum,
-        "建议类总分": suggestions_score_sum,
-        "信息类总分": info_terms_score_sum,
-        "抱歉类平均分": apologies_avg_score,
-        "建议类平均分": suggestions_avg_score,
-        "信息类平均分": info_terms_avg_score        
-    }
+    return analyze_result_string, final_score
