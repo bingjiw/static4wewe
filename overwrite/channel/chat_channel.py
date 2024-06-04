@@ -180,11 +180,11 @@ class ChatChannel(Channel):
         def DISABLE_LINKAI():    
             logger.debug("《《《《 子函数内：停用LINKAI插件 ")
             # 停用插件
-            success, message = PLUGIN_MANager_instance.disable_plugin("LINKAI")
+            success = PLUGIN_MANager_instance.disable_plugin("LINKAI")
             if success:
-                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 成功: {message}")
+                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 成功")
             else:
-                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 失败: {message}")  
+                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 失败")  
             return          
 
 
