@@ -109,7 +109,9 @@ def analyze_text_features__need_search(text):
     #
     #修正后总分 = 修正后总分 + 长度倾向值      长度倾向值 = (120-总字数)/60 越大越像是"很抱歉，无法获取"，越小越不像
     length_tendency = calculate_length_tendency(text)
-    final_score = adjusted_score + length_tendency
+    final_score = round(adjusted_score + length_tendency, 2)
+
+    
 
     #把分析结果用美观的格式组成字符串，方便调用者直接显示查看结果
     analyze_result_string = (
