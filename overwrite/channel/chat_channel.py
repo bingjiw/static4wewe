@@ -1,6 +1,9 @@
 #《《《《《 引入另一个 专门判断回答是否是“很抱歉，我无法”之类的 函数 .py 文件
 #《《《《《 判断 AI回复的文本 决定要不要实时搜索
 from channel.ANSWER_APOLOGY import analyze_text_features__need_search
+#《《《《《 引入 PLUGIN_MANager_instance 以便本文件中可用它
+from plugins import instance as PLUGIN_MANager_instance
+
 
 import os
 import re
@@ -177,7 +180,7 @@ class ChatChannel(Channel):
         def DISABLE_LINKAI():    
             logger.debug("《《《《 子函数内：停用LINKAI插件 ")
             # 停用插件
-            success, message = plugin_manager.PluginManager.disable_plugin("LINKAI")
+            success, message = PLUGIN_MANager_instance.disable_plugin("LINKAI")
             if success:
                 logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 成功: {message}")
             else:
@@ -189,7 +192,7 @@ class ChatChannel(Channel):
         def ENABLE_LINKAI():  
             logger.debug("《《《《《 子函数内：启用 LINKAI 插件 ")
             # 启用插件
-            success, message = plugin_manager.PluginManager.enable_plugin("LINKAI")
+            success, message = PLUGIN_MANager_instance.enable_plugin("LINKAI")
             if success:
                 logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 成功: {message}")
             else:
