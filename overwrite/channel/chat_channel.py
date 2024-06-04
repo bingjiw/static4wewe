@@ -166,44 +166,74 @@ class ChatChannel(Channel):
 
         return context
 
+
+
     def _handle(self, context: Context):
         if context is None or not context.content:
             return
-        logger.debug("###### 输出第1次前的 context 以作对比检查 [WX] ready to handle context: {}".format(context))
+    
+
+        #《《《《《《 子函数：停用LINKAI插件
+        def DISABLE_LINKAI():    
+            logger.debug("《《《《 子函数内：停用LINKAI插件 ")
+            # 停用插件
+            success, message = plugin_manager.PluginManager.disable_plugin("LINKAI")
+            if success:
+                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 成功: {message}")
+            else:
+                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 失败: {message}")  
+            return          
+
+
+        #《《《《《《 子函数：启用LINKAI插件
+        def ENABLE_LINKAI():  
+            logger.debug("《《《《《 子函数内：启用 LINKAI 插件 ")
+            # 启用插件
+            success, message = plugin_manager.PluginManager.enable_plugin("LINKAI")
+            if success:
+                logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 成功: {message}")
+            else:
+                logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 失败: {message}")  
+            return          
+
+
+        logger.debug("《《《《【先禁外援，首考(问)不及格(答不出)，再请外援代答】 首考前先：停用LINKAI插件（禁外援） ")
+        DISABLE_LINKAI()
+
+        logger.debug("》》》》示首考前的 context 以作对比检查 [WX] ready to handle context: {}".format(context))
         # reply的构建步骤
         reply = self._generate_reply(context)
                 
-        logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  开始 《《《《")
-        
-        logger.debug("《《《《《《 判断 AI回复的文本 决定要不要实时搜索。根据第1次产生的回答，来判断是否需要第2次调用（引发LINKAI插件来处理）")
+        logger.debug("《《《《 判断【首考的回答及格否?】再决定要不要请外援实时搜索。根据第1次产生的回答，来判断是否需要第2次调用（引发外援LINKAI插件来处理）")
         text = reply.content
         analyze_result_string, final_score = analyze_text_features__need_search(text)
-        logger.debug(analyze_result_string)
-    
+        logger.debug("\n" + analyze_result_string)
         
-        #analyze_text_features__need_search 如果 need_search 结果值较小，则不需要再 上网实时搜索
-        # 3 这个界线值 是拿多十多个回复测试后，得到的一个较好的 分界值
+        # analyze_text_features__need_search 如果 need_search 结果值较小，则不需要再 上网实时搜索
+        # 3.5 这个“及格分数线” 是拿多十多个回复测试后，得到的一个较好的 分界值
         if final_score < 3.5 :
-            logger.debug("《《《《《《 不需要 上网实时搜索。 不需要 第2次调用（引发LINKAI插件来处理）")
+            logger.debug("《《《《【首考及格】（首考成功过关）不需要再请外援上网实时搜索。不需要 第2次调用 _generate_reply（来引发LINKAI插件来处理）")
         else :
-            logger.debug("《《《《《《 第1次的回答 是“很抱歉...”，需要进行 第2次调用（引发LINKAI插件来处理）")
+            logger.debug("《《《《【首考不及格】（首考没过）第1次的回答是“很抱歉...”，需要进行 第2次调用 _generate_reply（来引发LINKAI插件来处理）")
         
-            logger.debug("《《《《《《 修改USE_LINKAI为TRUE ")
+            logger.debug("《《《《 【允许请外援】（需上网搜索）：启用 LINKAI 插件")
+            ENABLE_LINKAI()
 
-            logger.debug("###### 输出第1次后 第2次前 的 context 以作对比检查")
+            logger.debug("》》》》 输出 第1次后 第2次前 的 context 以作对比检查 context值={}".format(context))
         
-            logger.debug("《《《《《《 执行：第2次 调用 以让LINKAI产生回答 ")
+            logger.debug("《《《《【请外援来答】执行：第2次调用 _generate_reply 以让LINKAI产生回答 ")
             reply = self._generate_reply(context)
 
-            logger.debug("###### 输出第2次后的 context  以作对比检查")
+            logger.debug("》》》》 输出补考【第2次考试】后的 context 以作对比检查 context值={}".format(context))
         
-            logger.debug("《《《《《《 修改USE_LINKAI为FALSE ")
+            logger.debug("《《《《【考完了，禁外援】：停用 LINKAI 插件 ")
+            DISABLE_LINKAI()
 
-            logger.debug("《《《《《《 在回答的开头加上🌎说明这是互联网实时搜索得来的回答")
+            logger.debug("《《《《【用🌎标记答案是补考来的】在回答的开头加上🌎说明这是互联网实时搜索得来的回答")
             reply.content = "🌎" + reply.content 
         
 
-        logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  完成 《《《《")
+        logger.debug("《《《《 overwrite 《《《《【考试结束】《《《《（首考及或补考）完成《《《《")
 
         logger.debug("[WX] ready to decorate reply: {}".format(reply))
 
