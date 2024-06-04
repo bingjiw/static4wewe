@@ -44,6 +44,17 @@ def contains_information_terms(text):
             matched_terms.append((term, score))
     return matched_terms
 
+
+
+#长度倾向值=(120-总字数)/60 越大越像是"很抱歉，无法获取"，越小越不像
+def calculate_length_tendency(text):
+    char_count = len(text)
+    length_tendency = (120 - char_count) / 60
+    length_tendency = round(length_tendency, 2)   # 四舍五入保留2位小数
+    return length_tendency
+
+
+
 #判断 AI回复的文本 决定要不要实时搜索
 def analyze_text_features__need_search(text):
     matched_apologies = contains_apology(text)
@@ -72,6 +83,7 @@ def analyze_text_features__need_search(text):
     sum_of_scores = round(sum_of_scores, 2)  # 将 score 四舍五入保留2位小数
     
     
+
     #增加计算 “修正后总分” 功能：目的是考虑 3 类词语的先后次序关系，作为判断依据之一
     #
     #如果 抱歉类平均分 > 建议类平均分 
@@ -94,14 +106,18 @@ def analyze_text_features__need_search(text):
         adjusted_score -= 0.3
     #
     adjusted_score = round(adjusted_score, 2)
+    #
+    #修正后总分 = 修正后总分 + 长度倾向值      长度倾向值 = (120-总字数)/60 越大越像是"很抱歉，无法获取"，越小越不像
+    length_tendency = calculate_length_tendency(text)
+    final_score = adjusted_score + length_tendency
 
     #把分析结果用美观的格式组成字符串，方便调用者直接显示查看结果
     analyze_result_string = (
         text[:60] + "\n" +
-        f"词语:{matched_count} 总分:{sum_of_scores} 明细:{matched_features}\n" +
+        f"词语:{matched_count} 明细:{matched_features}\n" +
         f"三小类合计分: 抱歉类 {apologies_score_sum}, 建议类 {suggestions_score_sum}, 信息类 {info_terms_score_sum}\n" +
         f"三小类平均分: 抱歉类 {apologies_avg_score}, 建议类 {suggestions_avg_score}, 信息类 {info_terms_avg_score}\n" +
-        f"修正后总分:{adjusted_score}\n" +
+        f"原总分:{sum_of_scores}  按3类词先后次序修正后总分:{adjusted_score}  再依长度倾向值{length_tendency}修正后最终总分:{final_score}\n" +
         "--------------"
     )    
 
