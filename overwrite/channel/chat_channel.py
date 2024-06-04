@@ -3,6 +3,8 @@
 from channel.ANSWER_APOLOGY import analyze_text_features__need_search
 #《《《《《 引入 PLUGIN_MANager_instance 以便本文件中可用它
 from plugins import instance as PLUGIN_MANager_instance
+#《《《《《 引入 bridge单例，以便下面要 重设bot时用
+from bridge import bridge
 
 
 import os
@@ -178,13 +180,18 @@ class ChatChannel(Channel):
 
         #《《《《《《 子函数：停用LINKAI插件
         def DISABLE_LINKAI():    
-            logger.debug("《《《《 子函数内：停用LINKAI插件 ")
+            logger.debug("《《《《 子函数内：将要 停用LINKAI插件 ")
             # 停用插件
             success = PLUGIN_MANager_instance.disable_plugin("LINKAI")
             if success:
                 logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 成功")
             else:
-                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 失败")  
+                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 失败")
+
+            logger.debug(f"《《《《 子函数内：将要 把环境配置use_linkai设为False，重设bot（重选答题的GPT，让LINKAI的bot下岗）")
+            conf()["use_linkai"] = False
+            bridge.Bridge().reset_bot()                
+            
             return          
 
 
@@ -197,13 +204,19 @@ class ChatChannel(Channel):
                 logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 成功: {message}")
             else:
                 logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 失败: {message}")  
+            
+
+            logger.debug(f"《《《《 子函数内：将要 把环境配置use_linkai设为True，重设bot（重选答题的GPT，让LINKAI的bot上岗）")
+            conf()["use_linkai"] = True
+            bridge.Bridge().reset_bot()                
+                           
             return          
 
 
         logger.debug("《《《《【先禁外援，首考(问)不及格(答不出)，再请外援代答】 首考前先：停用LINKAI插件（禁外援） ")
         DISABLE_LINKAI()
 
-        logger.debug("》》》》示首考前的 context 以作对比检查 [WX] ready to handle context: {}".format(context))
+        logger.debug("》》》》示首考前的 context 以作对比检查 [WX] ready to handle context值={}".format(context))
         # reply的构建步骤
         reply = self._generate_reply(context)
                 
