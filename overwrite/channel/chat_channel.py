@@ -183,7 +183,7 @@ class ChatChannel(Channel):
         
         #analyze_text_features__need_search 如果 need_search 结果值较小，则不需要再 上网实时搜索
         # 3 这个界线值 是拿多十多个回复测试后，得到的一个较好的 分界值
-        if adjusted_score < 3 :
+        if adjusted_score < 3.5 :
             logger.debug("《《《《《《 不需要 上网实时搜索。 不需要 第2次调用（引发LINKAI插件来处理）")
         else :
             logger.debug("《《《《《《 第1次的回答 是“很抱歉...”，需要进行 第2次调用（引发LINKAI插件来处理）")
