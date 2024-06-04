@@ -176,6 +176,7 @@ class ChatChannel(Channel):
         logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  开始 《《《《")
         
         logger.debug("《《《《《《 判断 AI回复的文本 决定要不要实时搜索。根据第1次产生的回答，来判断是否需要第2次调用（引发LINKAI插件来处理）")
+        text = reply.content
         analyze_result_string, word_count, features, sum_of_scores, adjusted_score, score_summaries = analyze_text_features__need_search(text)
         logger.debug(analyze_result_string)
     
@@ -199,6 +200,7 @@ class ChatChannel(Channel):
             logger.debug("《《《《《《 修改USE_LINKAI为FALSE ")
 
             logger.debug("《《《《《《 在回答的开头加上🌎说明这是互联网实时搜索得来的回答")
+            reply.content = "🌎" + reply.content 
         
 
         logger.debug("《《《《《《《《《《《《《 overwrite(第1次回复后再联网搜索)  完成 《《《《")
