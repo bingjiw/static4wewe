@@ -183,12 +183,17 @@ class ChatChannel(Channel):
         #《《《《《《 子函数：停用LINKAI插件
         def DISABLE_LINKAI():    
             logger.debug("《《《《 子函数内：将要 停用LINKAI插件 ")
-            # 停用插件
-            success = PLUGIN_MANager_instance.disable_plugin("LINKAI")
-            if success:
-                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 成功")
-            else:
-                logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 失败")
+
+            ###因已经在_generate_reply中做了控制：只在需要LINKAI时，才产生事件emit_event。  
+            ###不用LINKAI时，就不会emit_event产生事件了
+            ###所以我后来觉得没必要 disable/enable _pluging 了，这样可以避免相同事件被多个相同的 plugin 实例听到和处理的问题
+            ###
+            ### 停用插件
+            ###success = PLUGIN_MANager_instance.disable_plugin("LINKAI")
+            ###if success:
+            ###    logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 成功")
+            ###else:
+            ###    logger.debug(f"《《《《 子函数内：停用 LINKAI 插件 失败")
 
             logger.debug(f"《《《《 子函数内：将要 把环境配置use_linkai设为False，重设bot（重选答题的GPT，让LINKAI的bot下岗）")
             conf()["use_linkai"] = False
@@ -204,12 +209,17 @@ class ChatChannel(Channel):
         #《《《《《《 子函数：启用LINKAI插件
         def ENABLE_LINKAI():  
             logger.debug("《《《《《 子函数内：启用 LINKAI 插件 ")
+
+            ###因已经在_generate_reply中做了控制：只在需要LINKAI时，才产生事件emit_event。  
+            ###不用LINKAI时，就不会emit_event产生事件了
+            ###所以我后来觉得没必要 disable/enable _pluging 了，这样可以避免相同事件被多个相同的 plugin 实例听到和处理的问题
+            ###            
             # 启用插件
-            success, message = PLUGIN_MANager_instance.enable_plugin("LINKAI")
-            if success:
-                logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 成功: {message}")
-            else:
-                logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 失败: {message}")  
+            ###success, message = PLUGIN_MANager_instance.enable_plugin("LINKAI")
+            ###if success:
+            ###    logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 成功: {message}")
+            ###else:
+            ###    logger.debug(f"《《《《 子函数内：启用 LINKAI 插件 失败: {message}")  
             
 
             logger.debug(f"《《《《 子函数内：将要 把环境配置use_linkai设为True，重设bot（重选答题的GPT，让LINKAI的bot上岗）")
@@ -279,7 +289,7 @@ class ChatChannel(Channel):
             {"channel": self, "context": context, "reply": reply},
         )
 
-        #《《《《 只在需要LINKAI时，才产生事件。不用LINKAI时，就不要产生事件了
+        #《《《《 只在需要LINKAI时，才产生事件emit_event。  不用LINKAI时，就不会emit_event产生事件了
         if conf()["use_linkai"] == True:
             e_context = PluginManager().emit_event( e_context )
 
