@@ -7,7 +7,7 @@ def contains_apology(text):
     apology_phrases = [
         "很抱歉", "对不起", "抱歉", "无法提供", "不能提供", "不能浏览", "无法实时",
         "不能查询", "无法查询", "作为AI", "作为人工智能", "作为一个基于", "历史数据训练",
-        "作为一个AI", "作为一个文本交互的AI", "无法直接回答"
+        "作为一个AI", "作为一个文本交互", "无法直接回答", "无法直接查询"
     ]
     matched_phrases = []
     for phrase in apology_phrases:
@@ -42,7 +42,7 @@ def contains_information_terms(text):
 
     information_terms = [
         "信息", "数据", "消息", "动态", "最新预报", "天气", "气象", "最新的", "新闻",
-        "财务数据","实时更新","最新财务"
+        "财务数据", "实时更新", "最新财务", "最新信息"
     ]
     matched_terms = []
     for term in information_terms:
