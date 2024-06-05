@@ -77,7 +77,7 @@ class Bridge(object):
                 # 创建 LINKAI 用的 chat bot
                 self.bots[typename][True] = create_bot(const.LINKAI)
                 # 创建 GPT35 用的 chat bot
-                self.bots[typename][False] = create_bot(const.GPT35)
+                self.bots[typename][False] = create_bot(const.CHATGPT)
 
                 logger.debug("《《《《 Bridge().get_bot 函数内：创建2个同时存在的chat bot完成：[ LINKAI用的chat bot、GPT35用的chat bot ]")
 
