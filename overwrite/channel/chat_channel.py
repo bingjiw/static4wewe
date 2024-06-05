@@ -5,6 +5,8 @@ from channel.ANSWER_APOLOGY import analyze_text_features__need_search
 from plugins import instance as PLUGIN_MANager_instance
 #《《《《《 引入 bridge单例，以便下面要 重设bot时用
 from bridge import bridge
+from bridge.bridge import Bridge
+from common import const
 
 
 import os
@@ -190,8 +192,12 @@ class ChatChannel(Channel):
 
             logger.debug(f"《《《《 子函数内：将要 把环境配置use_linkai设为False，重设bot（重选答题的GPT，让LINKAI的bot下岗）")
             conf()["use_linkai"] = False
-            bridge.Bridge().reset_bot()                
+            #reset会导致bot的session丢失，失去记忆。故不要执行：bridge.Bridge().reset_bot()                
             
+            # Change the model type
+            Bridge().btype["chat"] = const.CHATGPT
+            logger.debug(f"《《《《 子函数内：已把bridge.py中的model改为{const.GPT35}")
+
             return          
 
 
@@ -208,8 +214,12 @@ class ChatChannel(Channel):
 
             logger.debug(f"《《《《 子函数内：将要 把环境配置use_linkai设为True，重设bot（重选答题的GPT，让LINKAI的bot上岗）")
             conf()["use_linkai"] = True
-            bridge.Bridge().reset_bot()                
+            #reset会导致bot的session丢失，失去记忆。故不要执行：bridge.Bridge().reset_bot()                
                            
+            # Change the model type
+            Bridge().btype["chat"] = const.LINKAI
+            logger.debug(f"《《《《 子函数内：已把bridge.py中的model改为{const.LINKAI}")
+
             return          
 
 
@@ -261,12 +271,15 @@ class ChatChannel(Channel):
             self._send_reply(context, reply)
 
     def _generate_reply(self, context: Context, reply: Reply = Reply()) -> Reply:
-        e_context = PluginManager().emit_event(
-            EventContext(
-                Event.ON_HANDLE_CONTEXT,
-                {"channel": self, "context": context, "reply": reply},
+        #《《《《 只在需要LINKAI时，才产生事件。不用LINKAI时，就不要产生事件了
+        if conf()["use_linkai"] == True:
+            e_context = PluginManager().emit_event(
+                EventContext(
+                    Event.ON_HANDLE_CONTEXT,
+                    {"channel": self, "context": context, "reply": reply},
+                )
             )
-        )
+
         reply = e_context["reply"]
         if not e_context.is_pass():
             logger.debug("[WX] ready to handle context: type={}, content={}".format(context.type, context.content))
