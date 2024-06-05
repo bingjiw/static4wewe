@@ -41,7 +41,8 @@ def contains_information_terms(text):
         return []
 
     information_terms = [
-        "信息", "数据", "消息", "动态", "最新预报", "天气", "气象", "最新的", "新闻"
+        "信息", "数据", "消息", "动态", "最新预报", "天气", "气象", "最新的", "新闻",
+        "财务数据","实时更新","最新财务"
     ]
     matched_terms = []
     for term in information_terms:
