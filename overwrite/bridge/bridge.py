@@ -70,6 +70,9 @@ class Bridge(object):
                 # chat bot有2个，使self.bots["chat"]指向一个dict, 
                 # 此dict含2个键值对，键为bool型: True -> LINKAI BOT,  False -> GPT35
                 #
+                # 初始化 self.bots[typename] 为一个字典
+                self.bots[typename] = {}
+                #
                 # 创建 2 个 chat bot
                 # 创建 LINKAI 用的 chat bot
                 self.bots[typename][True] = create_bot(const.LINKAI)
