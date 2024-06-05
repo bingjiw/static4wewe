@@ -271,14 +271,17 @@ class ChatChannel(Channel):
             self._send_reply(context, reply)
 
     def _generate_reply(self, context: Context, reply: Reply = Reply()) -> Reply:
+        
+        #《《《《 把 EventContext 的构建从原 紧凑 代码中 提取到外面，放到前面来，
+        #《《《《 以便后面的reply = e_context["reply"]要用到
+        e_context = EventContext(
+            Event.ON_HANDLE_CONTEXT,
+            {"channel": self, "context": context, "reply": reply},
+        )
+
         #《《《《 只在需要LINKAI时，才产生事件。不用LINKAI时，就不要产生事件了
         if conf()["use_linkai"] == True:
-            e_context = PluginManager().emit_event(
-                EventContext(
-                    Event.ON_HANDLE_CONTEXT,
-                    {"channel": self, "context": context, "reply": reply},
-                )
-            )
+            e_context = PluginManager().emit_event( e_context )
 
         reply = e_context["reply"]
         if not e_context.is_pass():
