@@ -241,7 +241,7 @@ class ChatChannel(Channel):
         reply = self._generate_reply(context)
                 
         logger.debug("《《《《 判断【首考的回答及格否?】再决定要不要请外援实时搜索。根据第1次产生的回答，来判断是否需要第2次调用（引发外援LINKAI插件来处理）")
-        text = reply.content
+        text = None if reply is None else reply.content
         analyze_result_string, final_score = analyze_text_features__need_search(text)
         logger.debug("\n" + analyze_result_string)
         
