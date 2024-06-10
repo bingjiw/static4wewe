@@ -136,11 +136,12 @@ class ChatGPTBot(Bot, OpenAIImage):
             exception_message = str(e)  # Convert the exception to a string
             if "data may contain inappropriate content" in exception_message:
                 textToReplyUser = exception_message + """
-Your question (input content) or the LLM's response (output content) did not pass the server's "safety filter." Please adjust your question to avoid sensitive words in the response.
 
-If your purpose is merely to test the reaction of a domestic GPT to such questions (for the sake of trying it out or just for fun), there's no need to try further.
+Your question (input content) or the LLM's response (output content) did not pass the server's "safety filter." Please adjust your question to avoid sensitive words or prevent the LLM from generating sensitive words in response.
 
-If you have a genuine non-"China-**-related" question you wish to be answered but it was misjudged by the "safety filter," please try again later.
+If your intention is merely to test the reaction of a domestic GPT to such questions (for the sake of trying it out or just for fun), there's no need to try further.
+
+If you have a genuine "non-China-**-related" question that was misjudged by the "safety filter," please try again later.
 
 若对你的正常提问一直不答或出错，请联系技术支持微信bingjiw
 
