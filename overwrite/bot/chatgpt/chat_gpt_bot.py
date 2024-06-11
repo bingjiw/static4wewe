@@ -143,6 +143,8 @@ If your intention is merely to test the reaction of a domestic GPT to such quest
 
 If you have a genuine "non-China-**-related" question that was misjudged by the "safety filter," please try again later.
 
+请调整你的提问语句，避免某些**词语，换一个词语或换一种说法，再问，再试
+
 若对你的正常提问一直不答或出错，请联系技术支持微信bingjiw
 
 （微信上发的消息与国产GPT产生的回复都受到严格监管）"""
