@@ -324,6 +324,12 @@ class ChatChannel(Channel):
                     new_context = self._compose_context(ContextType.TEXT, reply.content, **context.kwargs)
                     if new_context:
                         reply = self._generate_reply(new_context)
+
+                        logger.debug("《《《 语音识别后，把识别出的文本替换原来context中的语音，经修改context.type与context.content传出去。这样，当语音提问需要调LINKAI搜索时，再调LINKAI时就无需再做一遍语音识别了。")
+                        # 《《《 这样，当语音提问需要调LINKAI搜索时，再调LINKAI时就无需再做一遍语音识别了。
+                        context.type = ContextType.TEXT
+                        context.content = new_context.content
+
                     else:
                         return
             elif context.type == ContextType.IMAGE:  # 图片消息，当前仅做下载保存到本地的逻辑
