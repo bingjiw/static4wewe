@@ -66,8 +66,12 @@ def calculate_length_tendency(text):
 
 
 
-#判断 AI回复的文本 决定要不要实时搜索
+# 根据AI回复的文本 判断决定需不需要实时搜索
 def analyze_text_features__need_search(text):
+    
+    if text == "【我要上网查询后才能回答】" :
+        return "LLM已明确表示：【我要上网查询后才能回答】", 99999
+
     matched_apologies = contains_apology(text)
     matched_suggestions = contains_alternative_suggestion(text)
     matched_info_terms = contains_information_terms(text)
