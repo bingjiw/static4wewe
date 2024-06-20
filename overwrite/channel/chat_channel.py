@@ -384,11 +384,17 @@ class ChatChannel(Channel):
 
                     # 根据范围显示相应的消息
                     if 0 <= fractional_part < 0.1:
-                        reply_text = reply_text + conf().get("reply_suffix_1", "")
+                        reply_text = reply_text + """
+━━━━━━━━
+加备用微号domesticAI防封号失联"""
                     elif 0.1 <= fractional_part < 0.2:
-                        reply_text = reply_text + conf().get("reply_suffix_2", "")
+                        reply_text = reply_text + """
+━━━━━━━━
+若一整天不回话，加微domesticAI"""
                     elif 0.2 <= fractional_part < 0.3:
-                        reply_text = reply_text + conf().get("reply_suffix_3", "")
+                        reply_text = reply_text + """
+━━━━━━━━
+若一整天不回话，找技术员bingjiw"""
 
                     # 》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》
 
