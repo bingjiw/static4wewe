@@ -373,6 +373,25 @@ class ChatChannel(Channel):
                         reply_text = conf().get("group_chat_reply_prefix", "") + reply_text + conf().get("group_chat_reply_suffix", "")
                     else:
                         reply_text = conf().get("single_chat_reply_prefix", "") + reply_text + conf().get("single_chat_reply_suffix", "")
+                    
+                    #《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《
+                    logger.debug("《《《 在回答后附加：随机显示3种小提示中的一种")
+                    # 获取当前时间的时间戳，精确到小数点后六位（微秒级别）
+                    timestamp = time.time()
+
+                    # 取小数点后的部分
+                    fractional_part = timestamp - int(timestamp)
+
+                    # 根据范围显示相应的消息
+                    if 0 <= fractional_part < 0.1:
+                        reply_text = reply_text + conf().get("reply_suffix_1", "")
+                    elif 0.1 <= fractional_part < 0.2:
+                        reply_text = reply_text + conf().get("reply_suffix_2", "")
+                    elif 0.2 <= fractional_part < 0.3:
+                        reply_text = reply_text + conf().get("reply_suffix_3", "")
+
+                    # 》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》
+
                     reply.content = reply_text
                 elif reply.type == ReplyType.ERROR or reply.type == ReplyType.INFO:
                     reply.content = "[" + str(reply.type) + "]\n" + reply.content
