@@ -386,15 +386,13 @@ class ChatChannel(Channel):
                     if 0 <= fractional_part < 0.1:
                         reply_text = reply_text + """
 ━━━━━━━━
-加备用微号domesticAI防封号失联"""
+小提示：开启【朗读回答】的方法：微信 > 我 > 设置 > 关怀模式【开启】> 听文字消息【开启】，返回聊天，轻点一下『回答的文字』"""
                     elif 0.1 <= fractional_part < 0.2:
                         reply_text = reply_text + """
 ━━━━━━━━
-若一整天不回话，加微domesticAI"""
+小提示：若我一整天都不回话，则可能已被封号，请加备用微信号domesticAI，或找技术员bingjiw"""
                     elif 0.2 <= fractional_part < 0.3:
-                        reply_text = reply_text + """
-━━━━━━━━
-若一整天不回话，找技术员bingjiw"""
+                        reply_text = reply_text + """ """
 
                     # 》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》
 
