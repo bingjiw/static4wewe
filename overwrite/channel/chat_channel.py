@@ -8,6 +8,8 @@ from bridge import bridge
 from bridge.bridge import Bridge
 from common import const
 
+#《《《《《 引入 随机数
+import random
 
 import os
 import re
@@ -375,23 +377,21 @@ class ChatChannel(Channel):
                         reply_text = conf().get("single_chat_reply_prefix", "") + reply_text + conf().get("single_chat_reply_suffix", "")
                     
                     #《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《
-                    logger.debug("《《《 在回答后附加：随机显示3种小提示中的一种")
-                    # 获取当前时间的时间戳，精确到小数点后六位（微秒级别）
-                    timestamp = time.time()
-
-                    # 取小数点后的部分
-                    fractional_part = timestamp - int(timestamp)
-
-                    # 根据范围显示相应的消息
-                    if 0 <= fractional_part < 0.1:
+                    #《《《 在回答后附加：随机显示3种小提示中的一种
+                    # 生成一个0到1之间的随机数
+                    x = random.random()
+                
+                    logger.debug("《《《 在回答后附加：随机显示3种小提示中的一种，随机数={}".format(x))
+                    # 根据随机数的范围显示不同的情况
+                    if 0 <= x < 0.1:
                         reply_text = reply_text + """
 ━━━━━━━━
 小提示：开启【朗读回答】的方法：微信 > 我 > 设置 > 关怀模式【开启】> 听文字消息【开启】，返回聊天，轻点一下『回答的文字』"""
-                    elif 0.1 <= fractional_part < 0.2:
+                    elif 0.1 <= x < 0.2:
                         reply_text = reply_text + """
 ━━━━━━━━
 小提示：若我一整天都不回话，则可能已被封号，请加备用微信号domesticAI，或找技术员bingjiw"""
-                    elif 0.2 <= fractional_part < 0.3:
+                    elif 0.2 <= x < 0.3:
                         reply_text = reply_text + """ """
 
                     # 》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》
