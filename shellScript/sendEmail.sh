@@ -153,7 +153,7 @@ update_log_and_send_email() {
     log_snippet="${log_snippet}, ${log_message}"
     insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行
     EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
-    send_email "$(hostname): $subject" "$EmailBodyText" "$attachment"
+    send_email "$(hostname) - $subject" "$EmailBodyText" "$attachment"
 }
 
 if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
