@@ -157,9 +157,9 @@ update_log_and_send_email() {
 }
 
 if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
-    update_log_and_send_email "最近20分钟 有被修改。邮件发：备份报告 + DB文件附件" "one-api.db and Backup Report" "/data/Encrypted_Compressed_SQLiteDB.zip"
+    update_log_and_send_email "最近20分钟 有被修改。邮件发：备份报告 + DB文件附件" "${hostname} - one-api.db and Backup Report" "/data/Encrypted_Compressed_SQLiteDB.zip"
 else
-    update_log_and_send_email "最近20分钟 无变化。邮件发：仅备份报告" "one-api.db and Backup Report" ""
+    update_log_and_send_email "最近20分钟 无变化。邮件发：仅备份报告" "${hostname} - one-api.db and Backup Report" ""
 fi
 
 echo "#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
