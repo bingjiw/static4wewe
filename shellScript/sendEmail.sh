@@ -51,12 +51,15 @@ else
     echo "# msmtp 配置文件已存在，不用重新写入"
 fi
 
+# 获取当前主机名
+realname=$(hostname)
+
 echo "# 配置 mutt，若无则写入 /root/.muttrc，以使用 msmtp 发送邮件"
 if [ ! -f /root/.muttrc ]; then
     cat > /root/.muttrc <<EOL
 set sendmail="/usr/bin/msmtp"
 set use_from=yes
-set realname="at command - auto job - app of key1api-web"
+set realname="$realname - auto at command job"
 set from=xiaorong.boy@icloud.com
 set envelope_from=yes
 EOL
@@ -135,10 +138,10 @@ send_email() {
 
     if [ -n "$attachment" ]; then
         echo "#发邮件 并附DB备份文件"
-        echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by key1api-web app in a docker container. \n$email_body\n\n---- The DB file is compressed and encrypted. ----" | mutt -s "$subject" -a "$attachment" -- LLC.Good.House@gmail.com
+        echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by sendEmail.sh for 1api. \n$email_body\n\n---- The DB file is compressed and encrypted. ----" | mutt -s "$subject" -a "$attachment" -- LLC.Good.House@gmail.com
     else
         echo "#发邮件 不附DB备份文件"
-        echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by key1api-web app in a docker container. \n$email_body\n\n---- Since no change, so the DB backup file is not included. ----" | mutt -s "$subject" LLC.Good.House@gmail.com
+        echo -e "Send on: $(date +"%Y-%m-%d %H:%M") by sendEmail.sh for 1api. \n$email_body\n\n---- Since no change, so the DB backup file is not included. ----" | mutt -s "$subject" LLC.Good.House@gmail.com
     fi
 }
 
