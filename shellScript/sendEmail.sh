@@ -153,13 +153,13 @@ update_log_and_send_email() {
     log_snippet="${log_snippet}, ${log_message}"
     insert_content_at_beginning_2nd_line "$TodayLogFilename" "$log_snippet"  #调用函数将内容插入到 今天的日志文件的最前面第2行
     EmailBodyText=$(cat "$TodayLogFilename")"$EmailBodyText_YesterdayPart"
-    send_email "$subject" "$EmailBodyText" "$attachment"
+    send_email "$(hostname): $subject" "$EmailBodyText" "$attachment"
 }
 
 if [ "$DBFileModifyTimestamp" -gt "$time_20_minutes_ago_timestamp" ]; then
-    update_log_and_send_email "最近20分钟 有被修改。邮件发：备份报告 + DB文件附件" "${hostname} - one-api.db and Backup Report" "/data/Encrypted_Compressed_SQLiteDB.zip"
+    update_log_and_send_email "最近20分钟 有被修改。邮件发：备份报告 + DB文件附件" "one-api.db and Backup Report" "/data/Encrypted_Compressed_SQLiteDB.zip"
 else
-    update_log_and_send_email "最近20分钟 无变化。邮件发：仅备份报告" "${hostname} - one-api.db and Backup Report" ""
+    update_log_and_send_email "最近20分钟 无变化。邮件发：仅备份报告" "one-api.db and Backup Report" ""
 fi
 
 echo "#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
