@@ -119,8 +119,8 @@ DBFileLastModifyDatetime=$(date -d "@$DBFileModifyTimestamp" "+%Y-%m-%d %H:%M:%S
 log_snippet="${log_snippet}DB文件最近修改于：$DBFileLastModifyDatetime"   
 
 
-# 当前时间减去120分钟的时间戳。  120分钟对应的是7200秒，而不是1200秒。
-time_120_minutes_ago_timestamp=$(date -d @$(( $(date +%s) - 7200 )) +%s)
+# 当前时间减去30分钟的时间戳。  30分钟对应的是1800秒。  120分钟对应的是7200秒
+time_30_minutes_ago_timestamp=$(date -d @$(( $(date +%s) - 1800 )) +%s)
 
 # 构建邮件正文的昨天的报告部分
 EmailBodyText_YesterdayPart="\n\n\n\n-------==== 昨天的报告 ====-------\n\n"
@@ -156,10 +156,10 @@ update_log_and_send_email() {
     send_email "$(hostname) - $subject" "$EmailBodyText" "$attachment"
 }
 
-if [ "$DBFileModifyTimestamp" -gt "$time_120_minutes_ago_timestamp" ]; then
-    update_log_and_send_email "最近120分钟 有被修改。邮件发：备份报告 + DB文件附件" "one-api.db and Backup Report" "/data/Encrypted_Compressed_SQLiteDB.zip"
+if [ "$DBFileModifyTimestamp" -gt "$time_30_minutes_ago_timestamp" ]; then
+    update_log_and_send_email "最近30分钟 有被修改。邮件发：备份报告 + DB文件附件" "one-api.db and Backup Report" "/data/Encrypted_Compressed_SQLiteDB.zip"
 else
-    update_log_and_send_email "最近120分钟 无变化。邮件发：仅备份报告" "one-api.db and Backup Report" ""
+    update_log_and_send_email "最近30分钟 无变化。邮件发：仅备份报告" "one-api.db and Backup Report" ""
 fi
 
 echo "#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
