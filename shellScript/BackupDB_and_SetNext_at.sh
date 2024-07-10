@@ -21,8 +21,8 @@ fi
 echo "# 等待9秒钟以确保 atd 已启动"
 sleep 9
 
-echo -e "# 设定120分钟后执行BackupDB_and_SetNext_at.sh脚本\n"
-echo "/data/BackupDB_and_SetNext_at.sh" | at now + 120 minutes #重启后自动运行此脚本时易出错：Can't open /run/atd.pid to signal atd. No atd running?
+echo -e "# 现用于开发测试，因开发测试时也要保存最近的数据，所以改为：设定30分钟后执行BackupDB_and_SetNext_at.sh脚本\n"
+echo "/data/BackupDB_and_SetNext_at.sh" | at now + 30 minutes #重启后自动运行此脚本时易出错：Can't open /run/atd.pid to signal atd. No atd running?
 
 echo -e "\n# 以最低CPU优先级执行BackupDB.sh"
 nice -n 19 /data/BackupDB.sh
